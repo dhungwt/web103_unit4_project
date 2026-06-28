@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom"; // if using React Router v6
+import { useParams, useNavigate } from "react-router-dom";
 import "../App.css";
 import { parkPrices } from "../utilities/prices";
 import { getPark, updatePark } from "../services/api.jsx";
@@ -10,8 +10,8 @@ const ADVENTURE_IMAGE =
   "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjac4gaFat7iZyXOLwHB0Oi-RgOkj8MPU3By3EcQ_CiZIfmHMj2FtUdNmD976JrOiexXc_Jo8Ge9MPJix9tcMYOPeEGJpZodovHMDURWJfKIesGlv-TF7KjtPbVgquYTqswB4C4g8I494e5/s400/rollercoaster.png";
 
 const EditPark = () => {
-  const { id } = useParams(); // get the park ID from the URL
-  const navigate = useNavigate(); // for redirect after update
+  const { id } = useParams();
+  const navigate = useNavigate();
 
   const [park, setPark] = useState({
     id: 0,
@@ -24,7 +24,6 @@ const EditPark = () => {
     img_url: ADVENTURE_IMAGE,
   });
 
-  // --- Helper functions (same as CreatePark) ---
   const getPriceKey = (category, value) => {
     const mappings = {
       ride: {
@@ -62,15 +61,6 @@ const EditPark = () => {
     return total;
   };
 
-  const isOptionDisabled = (category, value) => {
-    if (!park.is_family_friendly) return false;
-    const nonFamilyOptions = {
-      ride: ["hypercoaster"],
-      food: ["barbites"],
-      attraction: ["shooting", "casino"],
-    };
-    return nonFamilyOptions[category]?.includes(value) || false;
-  };
   // Fetch the park data when the component mounts or when id changes
   useEffect(() => {
     const fetchPark = async () => {
@@ -120,7 +110,6 @@ const EditPark = () => {
     }
   };
 
-  // Update handler – sends PUT request
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -141,157 +130,126 @@ const EditPark = () => {
       alert("Please select an attraction");
       return;
     }
+    if (park.is_family_friendly) {
+      const nonFamilyRides = ["hypercoaster"];
+      const nonFamilyFoods = ["barbites"];
+      const nonFamilyAttractions = ["shooting", "casino"];
 
+      if (nonFamilyRides.includes(park.ride)) {
+        alert("⚠️ Hypercoaster is not suitable for a family friendly park!");
+        return;
+      }
+      if (nonFamilyFoods.includes(park.food)) {
+        alert(
+          "⚠️ Alcohol and Bar Bites is not suitable for a family friendly park!",
+        );
+        return;
+      }
+      if (nonFamilyAttractions.includes(park.attraction)) {
+        alert("⚠️ That attraction is not suitable for a family friendly park!");
+        return;
+      }
+    }
     try {
-      await updatePark(id, park); // uses the imported updatePark from api.jsx
+      await updatePark(id, park);
       navigate("/customparks");
     } catch (error) {
       alert("Failed to update park: " + error.message);
     }
   };
 
-  // --- Render the SAME form, but with different title and button text ---
   return (
     <div className="EditPark">
       <center>
         <h2>Edit Park</h2> {/* changed title */}
+        <form onSubmit={handleSubmit}>
+          {" "}
+          <label>Name</label> <br />
+          <input
+            className="form-field"
+            type="text"
+            name="park_name"
+            value={park.park_name}
+            onChange={handleChange}
+            required
+          />
+          <br />
+          <br />
+          {/* Family Friendly checkbox */}
+          <input
+            type="checkbox"
+            name="is_family_friendly"
+            checked={park.is_family_friendly}
+            onChange={handleChange}
+          />
+          <label>Family Friendly?</label>
+          <br />
+          <br />
+          {/* Ride */}
+          <label>Main Ride</label> <br />
+          <select
+            className="form-field"
+            name="ride"
+            value={park.ride}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select a ride</option>
+            <option value="hypercoaster">Hypercoaster</option>
+            <option value="ferriswheel">Ferris Wheel</option>
+            <option value="carousel">Carousel</option>
+            <option value="logflume">Log Flume </option>
+          </select>
+          <br />
+          <br />
+          {/* Food */}
+          <label>Food Offerings</label> <br />
+          <select
+            className="form-field"
+            name="food"
+            value={park.food}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select food</option>
+            <option value="classics">Fair Food</option>
+            <option value="barbites">Alcohol and Bar Bites</option>
+            <option value="hype">Hype Food</option>
+            <option value="fancy">Food Festival</option>
+          </select>
+          <br />
+          <br />
+          {/* Attraction */}
+          <label>Additional Attraction</label> <br />
+          <select
+            className="form-field"
+            name="attraction"
+            value={park.attraction}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select an attraction</option>
+            <option value="shooting">Shooting Range</option>
+            <option value="casino">Casino</option>
+            <option value="aquarium">Aquarium</option>
+            <option value="mascots">Mascot Meet and Greet</option>
+          </select>
+          <br />
+          <br />
+          {/* Total Price */}
+          <label>Total Cost</label> <br />
+          <input
+            className="form-field"
+            type="text"
+            value={`$${park.total_price.toLocaleString()}`}
+            readOnly
+            style={{ backgroundColor: "#f0f0f0", fontWeight: "bold" }}
+          />
+          <br />
+          <br />
+          <button type="submit">Update Park</button> {/* changed label */}
+        </form>
       </center>
-      <form onSubmit={handleSubmit}>
-        {" "}
-        {/* changed handler */}
-        {/* Name */}
-        <label>Name</label> <br />
-        <input
-          type="text"
-          name="park_name"
-          value={park.park_name}
-          onChange={handleChange}
-          required
-        />
-        <br />
-        <br />
-        {/* Family Friendly checkbox */}
-        <input
-          type="checkbox"
-          name="is_family_friendly"
-          checked={park.is_family_friendly}
-          onChange={handleChange}
-        />
-        <label>Family Friendly?</label>
-        <br />
-        <br />
-        {/* Ride */}
-        <label>Main Ride</label> <br />
-        <select name="ride" value={park.ride} onChange={handleChange} required>
-          <option value="">Select a ride</option>
-          <option
-            value="hypercoaster"
-            disabled={isOptionDisabled("ride", "hypercoaster")}
-          >
-            Hypercoaster{" "}
-            {isOptionDisabled("ride", "hypercoaster") &&
-              "(Not family friendly)"}
-          </option>
-          <option
-            value="ferriswheel"
-            disabled={isOptionDisabled("ride", "ferriswheel")}
-          >
-            Ferris Wheel
-          </option>
-          <option
-            value="carousel"
-            disabled={isOptionDisabled("ride", "carousel")}
-          >
-            Carousel
-          </option>
-          <option
-            value="logflume"
-            disabled={isOptionDisabled("ride", "logflume")}
-          >
-            Log Flume{" "}
-            {isOptionDisabled("ride", "logflume") && "(Not family friendly)"}
-          </option>
-        </select>
-        <br />
-        <br />
-        {/* Food */}
-        <label>Food Offerings</label> <br />
-        <select name="food" value={park.food} onChange={handleChange} required>
-          <option value="">Select food</option>
-          <option
-            value="classics"
-            disabled={isOptionDisabled("food", "classics")}
-          >
-            Fair Food
-          </option>
-          <option
-            value="barbites"
-            disabled={isOptionDisabled("food", "barbites")}
-          >
-            Alcohol and Bar Bites{" "}
-            {isOptionDisabled("food", "barbites") && "(Not family friendly)"}
-          </option>
-          <option value="hype" disabled={isOptionDisabled("food", "hype")}>
-            Hype Food
-          </option>
-          <option value="fancy" disabled={isOptionDisabled("food", "fancy")}>
-            Food Festival
-          </option>
-        </select>
-        <br />
-        <br />
-        {/* Attraction */}
-        <label>Additional Attraction</label> <br />
-        <select
-          name="attraction"
-          value={park.attraction}
-          onChange={handleChange}
-          required
-        >
-          <option value="">Select an attraction</option>
-          <option
-            value="shooting"
-            disabled={isOptionDisabled("attraction", "shooting")}
-          >
-            Shooting Range{" "}
-            {isOptionDisabled("attraction", "shooting") &&
-              "(Not family friendly)"}
-          </option>
-          <option
-            value="casino"
-            disabled={isOptionDisabled("attraction", "casino")}
-          >
-            Casino{" "}
-            {isOptionDisabled("attraction", "casino") &&
-              "(Not family friendly)"}
-          </option>
-          <option
-            value="aquarium"
-            disabled={isOptionDisabled("attraction", "aquarium")}
-          >
-            Aquarium
-          </option>
-          <option
-            value="mascots"
-            disabled={isOptionDisabled("attraction", "mascots")}
-          >
-            Mascot Meet and Greet
-          </option>
-        </select>
-        <br />
-        <br />
-        {/* Total Price */}
-        <label>Total Cost</label> <br />
-        <input
-          type="text"
-          value={`$${park.total_price.toLocaleString()}`}
-          readOnly
-          style={{ backgroundColor: "#f0f0f0", fontWeight: "bold" }}
-        />
-        <br />
-        <br />
-        <button type="submit">Update Park</button> {/* changed label */}
-      </form>
     </div>
   );
 };

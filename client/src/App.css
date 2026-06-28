@@ -10,3 +10,26 @@
     overflow-x: hidden;
     padding-bottom: 50px;
 }
+
+.form-group {
+  margin-bottom: 10px; 
+}
+
+.form-group label {
+  display: block;     
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.form-field, select {
+  width: 200px;        
+  padding: 5px 10px;   
+  font-size: 14px;    
+  border-radius: 4px;  
+  border: 1px solid #ccc;
+}
+
+button {
+  padding: 5px 15px;
+  font-size: 14px;
+}
