@@ -1,6 +1,6 @@
 import { pool } from "../config/database.js";
 
-const getParks = async (req, res, error) => {
+const getParks = async (req, res) => {
   try {
     const results = await pool.query("SELECT * FROM parks ORDER BY id ASC");
     res.status(200).json(results.rows);
@@ -9,7 +9,7 @@ const getParks = async (req, res, error) => {
   }
 };
 
-const getParkById = async (req, res, error) => {
+const getParkById = async (req, res) => {
   try {
     const selectQuery = `
       SELECT park_name, is_family_friendly, ride, food, attraction, total_price, img_url
