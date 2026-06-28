@@ -43,6 +43,7 @@ Here's a walkthrough of implemented required features:
 
 ![Database and Table Walkthrough](https://github.com/dhungwt/web103_unit4_project/blob/main/Kapture%202026-06-28%20at%2017.28.12.gif?raw=true)
 
+![Page Walkthrough](https://github.com/dhungwt/web103_unit4_project/blob/main/Kapture%202026-06-28%20at%2017.48.38.gif?raw=true)
 <!-- Replace this with whatever GIF tool you used! -->
 GIF created with ...  KAP
 <!-- Recommended tools:
