@@ -12,13 +12,13 @@ const app = express();
 
 app.use(express.json());
 
-app.use("/parks", parksRouter);
+app.use("/api/parks", parksRouter);
 
 app.get("/", (req, res) => {
   res
     .status(200)
     .send(
-      '<h1 style="text-align: center; margin-top: 50px;">🎡 🎢 🎠 🎟️ 🍿 🎪 🎠 🎡 🎢 🍿 🎫 🎪Dream Park🎠 API</h1>',
+      '<h1 style="text-align: center; margin-top: 50px;">🎡 🎢 🍿 🎫 🎪Dream Park🎠 API</h1>',
     );
 });
 

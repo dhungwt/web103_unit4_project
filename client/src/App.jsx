@@ -1,41 +1,39 @@
-import React from 'react'
-import { useRoutes } from 'react-router-dom'
-import Navigation from './components/Navigation'
-import ViewCars from './pages/ViewCars'
-import EditCar from './pages/EditCar'
-import CreateCar from './pages/CreateCar'
-import CarDetails from './pages/CarDetails'
-import './App.css'
+import React from "react";
+import { useRoutes } from "react-router-dom";
+import Navigation from "./components/Navigation";
+import ViewPark from "./pages/ViewParks";
+import EditPark from "./pages/EditPark";
+import CreatePark from "./pages/CreatePark";
+import ParkDetails from "./pages/ParkDetails";
+import "./App.css";
 
 const App = () => {
   let element = useRoutes([
     {
-      path: '/',
-      element: <CreateCar title='BOLT BUCKET | Customize' />
+      path: "/",
+      element: <CreatePark title="Dream Park | Customize" />,
     },
     {
-      path:'/customcars',
-      element: <ViewCars title='BOLT BUCKET | Custom Cars' />
+      path: "/customparks",
+      element: <ViewPark title="Dream Park | Custom Parks" />,
     },
     {
-      path: '/customcars/:id',
-      element: <CarDetails title='BOLT BUCKET | View' />
+      path: "/customparks/:id",
+      element: <ParkDetails title="Dream Park | View" />,
     },
     {
-      path: '/edit/:id',
-      element: <EditCar title='BOLT BUCKET | Edit' />
-    }
-  ])
+      path: "/edit/:id",
+      element: <EditPark title="Dream Park | Edit" />,
+    },
+  ]);
 
   return (
-    <div className='app'>
-
+    <div className="app">
       <Navigation />
 
-      { element }
-
+      {element}
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;

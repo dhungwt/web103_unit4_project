@@ -16,8 +16,8 @@ const getParkById = async (req, res) => {
       FROM parks
       WHERE id=$1
     `;
-    const parkId = req.params.parkId;
-    const results = await pool.query(selectQuery, [parkId]);
+    const id = req.params.id;
+    const results = await pool.query(selectQuery, [id]);
     res.status(200).json(results.rows[0]);
   } catch (error) {
     res.status(409).json({ error: error.message });
@@ -70,7 +70,7 @@ const updatePark = async (req, res) => {
     } = req.body;
     const results = await pool.query(
       `
-          UPDATE parks SET park_name = $1, is_family_friendly = $2, ride = $3, food = $4, attraction = $5, total_price = $6, img_url = $7 WHERE id = $8`,
+          UPDATE parks SET park_name = $1, is_family_friendly = $2, ride = $3, food = $4, attraction = $5, total_price = $6, img_url = $7 WHERE id = $8  RETURNING *`,
       [
         park_name,
         is_family_friendly,

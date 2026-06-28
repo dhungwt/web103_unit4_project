@@ -3,16 +3,11 @@ import ParksController from "../controllers/parks.js";
 
 const router = express.Router();
 
-console.log("ParksController object looks like:", ParksController);
-
 router.get("/", ParksController.getParks);
-
-router.get("/:parkId", ParksController.getParkById);
-
+router.get("/:id", ParksController.getParkById);
 router.post("/", ParksController.createPark);
-
-router.patch("/:id", ParksController.updatePark);
-
+router.put("/:id", ParksController.updatePark);
 router.delete("/:id", ParksController.deletePark);
 
 export default router;
+//testing
